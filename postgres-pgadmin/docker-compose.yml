@@ -1,0 +1,28 @@
+version: '3.7'
+services: 
+    postgres:
+        image: postgres:latest
+        container_name: postgres-pp
+        hostname: postgres
+        ports: 
+            - 5432:5432
+        environment: 
+            POSTGRES_USER: postgres
+            POSTGRES_DB: pp_db
+            POSTGRES_HOST_AUTH_METHOD: trust
+        volumes: 
+            - ./data:/var/lib/postgresql/data
+    
+    pgadmin:
+        image: dpage/pgadmin4:latest
+        container_name: pgadmin-pp
+        depends_on: 
+            - postgres
+        ports: 
+            - 5555:80
+        environment: 
+            PGADMIN_DEFAULT_EMAIL: pg@example.com
+            PGADMIN_DEFAULT_PASSWORD: pga
+
+volumes: 
+    data:
