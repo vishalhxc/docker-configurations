@@ -27,3 +27,7 @@ services:
             - 3000:3000
         volumes: 
             - ./provisioning:/etc/grafana/provisioning
+
+networks: 
+    default:
+        driver: tpg
