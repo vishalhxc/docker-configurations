@@ -2,8 +2,8 @@ version: '3.7'
 services: 
     influxdb:
         image: influxdb:latest
-        container_name: influxdb-tg
-        network_mode: tg
+        container_name: influxdb-tick
+        network_mode: tick
         ports: 
             - 8086:8086
         volumes: 
@@ -11,8 +11,8 @@ services:
 
     telegraf:
         image: telegraf:latest
-        container_name: telegraf-tg
-        network_mode: tg
+        container_name: telegraf-tick
+        network_mode: tick
         depends_on: 
             - influxdb
         ports: 
@@ -22,14 +22,13 @@ services:
 
     chronograf:
         image: chronograf:latest
-        container_name: chronograf-tg
-        network_mode: tg
+        container_name: chronograf-tick
+        network_mode: tick
         depends_on: 
-            - influxdb
             - telegraf
         environment: 
-            INFLUXDB_URL: http://influxdb-tg:8086
-            KAPACITOR_URL: http://kapacitor-tg:9092
+            INFLUXDB_URL: http://influxdb-tick:8086
+            KAPACITOR_URL: http://kapacitor-tick:9092
         ports: 
             - 8888:8888
         links:
@@ -38,16 +37,14 @@ services:
     
     kapacitor:
         image: kapacitor:latest
-        container_name: kapacitor-tg
-        network_mode: tg
+        container_name: kapacitor-tick
+        network_mode: tick
         depends_on: 
-            - influxdb
             - telegraf
-            - chronograf
         environment: 
             KAPACITOR_HOSTNAME: kapacitor
-            KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb-tg:8086
+            KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb-tick:8086
         links: 
             - influxdb
         ports: 
-            - 9092:9092
+            - 9093:9093
