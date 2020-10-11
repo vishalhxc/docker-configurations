@@ -1,0 +1,28 @@
+version: '3.7'
+services: 
+  busybox: 
+    image: busybox:latest
+    container_name: busybox-spl
+    volumes: 
+        - /opt/splunk/etc
+        - /opt/splunk/var
+  
+  splunk:
+    image: store/splunk/enterprise:latest
+    container_name: splunk-spl
+    hostname: splunk
+    environment: 
+      SPLUNK_START_ARGS: --accept-license --answer-yes
+      SPLUNK_ENABLE_LISTEN: 9997
+      SPLUNK_ADD: tcp 1514
+      SPLUNK_USER: root
+    volumes_from: 
+      - busybox
+    volumes: 
+      - /var/lib/docker/containers:/host/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "8000:8000"
+      - "9997:9997"
+      - "8088:8088"
+      - "1514:1514"
